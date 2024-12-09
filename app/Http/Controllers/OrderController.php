@@ -61,4 +61,24 @@ class OrderController extends Controller
 
         return redirect()->route('dashboard')->with('success', 'Order confirmed!');
     }
+
+    public function dashboard()
+    {
+        //delete 0 total orders
+        auth()->user()->orders->each(function ($order) {
+            $orderTotal = $order->items->sum(function ($item) {
+                return $item->quantity * $item->dish->price;
+            });
+
+            if ($orderTotal == 0) {
+                $order->delete();
+            }
+        });
+
+        //get user order
+        $userOrders = auth()->user()->orders; 
+        return view('dashboard', compact('userOrders'));
+    }
+
+  
 }

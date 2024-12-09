@@ -71,16 +71,43 @@
                         <p class="text-gray-600 dark:text-gray-400">Crispy crab cakes with fresh herbs and a zesty dipping sauce.</p>
                     </div>
                 </div>
+            </div>
 
-                <!-- Order Button -->
-                <div class="text-center mt-8">
-                    <a href="{{ route('order.page') }}" 
-                    class="font-bold py-2 px-4 rounded"
-                    style="background-color: black; color: white; display: inline-block;">
+            <!-- Order Button -->
+            <div class="text-center mt-8">
+                <a href="{{ route('order.page') }}" 
+                   class="font-bold py-2 px-4 rounded"
+                   style="background-color: black; color: white; display: inline-block;">
                     Order Now!
-                    </a>
-                </div>
+                </a>
+            </div>
 
+            <!-- Order History Section -->
+            <div class="mt-16 bg-white dark:bg-gray-800 p-6 shadow-sm sm:rounded-lg">
+                <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200">Order History</h2>
+                @if($userOrders->isEmpty())
+                    <p class="text-gray-600 dark:text-gray-400 mt-4">You have no orders yet.</p>
+                @else
+                    <ul class="mt-4">
+                        @foreach ($userOrders as $order)
+                            <li class="border-b pb-4 mb-4">
+                                <h3 class="font-semibold text-gray-800 dark:text-gray-300">
+                                    Order #{{ $order->id }} ({{ $order->created_at->format('d M Y, h:i A') }})
+                                </h3>
+                                <ul class="ml-4 mt-2">
+                                    @foreach ($order->items as $item)
+                                        <li>
+                                            {{ $item->dish->name }} - {{ $item->quantity }} x ${{ number_format($item->dish->price, 2) }}
+                                        </li>
+                                    @endforeach
+                                </ul>
+                                <p class="font-bold mt-2 text-gray-700 dark:text-gray-400">
+                                    Total: ${{ number_format($order->total, 2) }}
+                                </p>
+                            </li>
+                        @endforeach
+                    </ul>
+                @endif
             </div>
         </div>
     </div>
